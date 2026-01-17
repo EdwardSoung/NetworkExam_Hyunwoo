@@ -10,3 +10,11 @@ enum class EGameState : uint8
 	Playing,
 	Finished,
 };
+
+UENUM()
+enum class EUIType : uint8
+{
+	None,
+	LobbyHUD,
+	GameHUD
+};

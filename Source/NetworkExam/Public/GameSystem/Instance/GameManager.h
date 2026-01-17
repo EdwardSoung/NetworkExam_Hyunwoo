@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Data/UIData.h"
 #include "GameManager.generated.h"
 
 /**
@@ -32,19 +33,25 @@ private:
 	void HandleTravelFailure(UWorld* World, ETravelFailure::Type FailureType, const FString& ErrorString);
 
 protected:
-	// Á¢¼ÓÇÒ ¼­¹ö IP
+	// ì ‘ì†í•  ì„œë²„ IP
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Test")
 	FString ServerIP;
 
-	// °ÔÀÓ ½ÃÀÛ½Ã ·ÎµåÇÒ ¸Ê
+	// ê²Œì„ ì‹œì‘ì‹œ ë¡œë“œí•  ë§µ
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Test")
 	TSoftObjectPtr<UWorld> MainLevelAsset = nullptr;
 
-	// ¼­¹ö »ı¼º½Ã ·ÎµåÇÒ ¸Ê
+	// ì„œë²„ ìƒì„±ì‹œ ë¡œë“œí•  ë§µ
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Test")
 	TSoftObjectPtr<UWorld> ServerLevelAsset = nullptr;
 
-	// ÃÖ´ë Á¢¼Ó°¡´ÉÇÑ ÇÃ·¹ÀÌ¾î ¼ö
+	// ìµœëŒ€ ì ‘ì†ê°€ëŠ¥í•œ í”Œë ˆì´ì–´ ìˆ˜
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Test")
 	int32 MaxPlayers = 2;
+
+public:
+	//UI
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data|UI")
+	TSoftObjectPtr<UUIData> UIData = nullptr;
+
 };
