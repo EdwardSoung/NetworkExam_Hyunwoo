@@ -22,11 +22,9 @@ public:
 
 	UUserWidget* ShowWidget(EUIType InUIType);
 
+
 protected:
 	//생성된 UI 데이터
 	TMap<EUIType, UUserWidget*> CreatedWidgets;
-
-	EUIType OpenedUI = EUIType::None;
-
 
 };

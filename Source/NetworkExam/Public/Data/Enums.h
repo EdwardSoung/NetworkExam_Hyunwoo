@@ -7,6 +7,7 @@ enum class EGameState : uint8
 {
 	Lobby,
 	Waiting,
+	OnReady,
 	Playing,
 	Finished,
 };

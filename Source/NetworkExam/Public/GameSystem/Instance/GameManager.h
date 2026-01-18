@@ -52,6 +52,6 @@ protected:
 public:
 	//UI
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data|UI")
-	TSoftObjectPtr<UUIData> UIData = nullptr;
+	TObjectPtr<UUIData> UIData = nullptr;
 
 };

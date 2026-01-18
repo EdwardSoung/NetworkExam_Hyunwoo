@@ -7,59 +7,37 @@
 
 void UUIManager::InitUI()
 {
-	CreatedWidgets.Empty();
+	//CreatedWidgets.Empty();
 }
 
 UUserWidget* UUIManager::ShowWidget(EUIType InUIType)
 {
 	UUserWidget* TargetUI = nullptr;
-	if (CreatedWidgets.Contains(InUIType))
+	auto GI = Cast<UGameManager>(GetGameInstance());
+	if (GI)
 	{
-		TargetUI = *CreatedWidgets.Find(InUIType);
-	}
-	else
-	{
-		auto GI = Cast<UGameManager>(GetGameInstance());
-		if (GI)
+		auto UIData = GI->UIData.Get();
+		if (UIData)
 		{
-			auto UIData = GI->UIData.Get();
-			if (UIData)
+			auto WidgetClass = *UIData->Data.Find(InUIType);
+			if (WidgetClass)
 			{
-				auto WidgetClass = *UIData->Data.Find(InUIType);
-				if (WidgetClass)
+				UWorld* World = GetWorld();
+				if (!World) return nullptr;
+
+				APlayerController* PC = UGameplayStatics::GetPlayerController(World, 0);
+
+				TargetUI = CreateWidget<UUserWidget>(PC, WidgetClass);
+				if (TargetUI)
 				{
-					UWorld* World = GetWorld();
-					if (!World) return nullptr;
-
-					APlayerController* PC = UGameplayStatics::GetPlayerController(World, 0);
-
-					TargetUI = CreateWidget<UUserWidget>(PC, WidgetClass);
-					if (TargetUI)
-					{
-						TargetUI->AddToViewport();
-						CreatedWidgets.Add(InUIType, TargetUI);
-					}
-				}							
+					TargetUI->AddToViewport();
+					//CreatedWidgets.Add(InUIType, TargetUI);
+				}
 			}
 		}
 	}
 
-	if (TargetUI)
-	{
-		if (OpenedUI != EUIType::None)
-		{
-			auto PrevUI = *CreatedWidgets.Find(OpenedUI);
-			if (PrevUI)
-			{
-				PrevUI->SetVisibility(ESlateVisibility::Collapsed);
-			}
-		}
-
-		TargetUI->SetVisibility(ESlateVisibility::Visible);
-		OpenedUI = InUIType;
-
-		return TargetUI;
-	}
+	//레벨 전환 시 삭제됨...
 
 	return nullptr;
 }

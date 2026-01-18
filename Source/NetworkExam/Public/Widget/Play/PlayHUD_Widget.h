@@ -4,32 +4,28 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "LobbyHUD_Widget.generated.h"
+#include "PlayHUD_Widget.generated.h"
 
 class UButton;
-class UTextBlock;
 
 /**
  * 
  */
 UCLASS()
-class NETWORKEXAM_API ULobbyHUD_Widget : public UUserWidget
+class NETWORKEXAM_API UPlayHUD_Widget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
 protected:
 	virtual void NativeConstruct() override;
 
 	UFUNCTION()
-	void OnCreateServer();
+	void OnClickStart();
 
-	UFUNCTION()
-	void OnJoinServer();
+public:
+	void SetStartButton(bool bIsVisible);
+
 protected:
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> CreateServerButton;
-
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> JoinServerButton;
-
+	TObjectPtr<UButton> StartButton = nullptr;
 };

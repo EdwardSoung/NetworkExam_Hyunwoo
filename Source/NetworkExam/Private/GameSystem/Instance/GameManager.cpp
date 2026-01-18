@@ -2,6 +2,7 @@
 
 
 #include "GameSystem/Instance/GameManager.h"
+#include "GameSystem/State/PickupGameState.h"
 #include <Kismet/GameplayStatics.h>
 
 UGameManager::UGameManager()
@@ -24,6 +25,21 @@ void UGameManager::Init()
 
 void UGameManager::CreateServer()
 {
+	
+
+	UWorld* World = GetWorld();
+	if (!World)
+	{
+		UE_LOG(LogTemp, Error, TEXT("World가 없습니다!!! 서버를 만들 수 없습니다."));
+		return;
+	}
+
+	if (World->GetNetMode() == NM_ListenServer)
+	{
+
+		return;
+	}
+
 	FString MapName;
 	if (!ServerLevelAsset.IsNull())
 	{
@@ -33,17 +49,15 @@ void UGameManager::CreateServer()
 	{
 		MapName = UGameplayStatics::GetCurrentLevelName(GetWorld());	// 거의 의미없음.
 	}
-
-	UWorld* World = GetWorld();
-	if (!World)
-	{
-		UE_LOG(LogTemp, Error, TEXT("World가 없습니다!!! 서버를 만들 수 없습니다."));
-		return;
-	}
-
+	
 	FString Options = FString::Printf(TEXT("listen?MaxPlayers=%d"), MaxPlayers);
 	UE_LOG(LogTemp, Log, TEXT("리슨서버 생성 : %s, 최대인원 : %d"), *MapName, MaxPlayers);
 
+	auto State = World->GetGameState<APickupGameState>();
+	if (State)
+	{
+		State->ChangeState(EGameState::Waiting);
+	}
 	UGameplayStatics::OpenLevel(World, FName(*MapName), true, Options);
 	UE_LOG(LogTemp, Log, TEXT("리슨서버 시작"));
 	if (GEngine)
