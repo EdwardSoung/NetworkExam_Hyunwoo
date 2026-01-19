@@ -24,7 +24,9 @@ protected:
 public:
 	inline float GetGameElapsedTime() const { return GameElapsedTime; }
 	inline float GetGameRemainingTime() const { return GameRemainingTime; }
+	inline float GetPendingRemainingTime() const { return PendingRemainingTime; }
 	inline bool IsGameOver() const { return GameState == EGameState::Finished; }
+	inline EGameState GetCurrent() { return GameState; }
 
 	void ChangeState(EGameState InState);
 

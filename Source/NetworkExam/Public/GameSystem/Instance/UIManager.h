@@ -22,9 +22,11 @@ public:
 
 	UUserWidget* ShowWidget(EUIType InUIType);
 
+	UUserWidget* GetCurrentWidget();
 
 protected:
 	//생성된 UI 데이터
 	TMap<EUIType, UUserWidget*> CreatedWidgets;
 
+	TObjectPtr<UUserWidget> CurrentWidget;
 };

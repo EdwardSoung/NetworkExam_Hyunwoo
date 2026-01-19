@@ -15,6 +15,7 @@ class NETWORKEXAM_API APlayGameMode : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
+	virtual void StartPlay() override;
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void Logout(AController* Exiting) override;
 };

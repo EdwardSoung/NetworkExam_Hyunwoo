@@ -14,13 +14,16 @@ APickupGameState::APickupGameState()
 void APickupGameState::BeginPlay()
 {
 	GameRemainingTime = GameDuration;
+	PendingRemainingTime = PendingDuration;
 	GameElapsedTime = 0.0f;
 	PendingElapsedTime = 0.0f;
 }
 
 void APickupGameState::Tick(float DeltaTime)
 {
-	if (HasAuthority() && GameState == EGameState::Playing)
+	Super::Tick(DeltaTime);
+
+	if (HasAuthority())
 	{
 		if (GameState == EGameState::Playing)
 		{
@@ -76,6 +79,7 @@ void APickupGameState::ChangeState(EGameState InState)
 		break;
 	case EGameState::Waiting:
 		//게임 시작하기를 대기중
+		
 		break;
 
 	case EGameState::OnReady:
@@ -87,6 +91,11 @@ void APickupGameState::ChangeState(EGameState InState)
 	case EGameState::Playing:
 		//오브젝트 스폰 시작
 		UE_LOG(LogTemp, Log, TEXT("플레이 시작!!"));
+
+
+		break;
+	case EGameState::Finished:
+		//결과 화면
 		break;
 	}
 }

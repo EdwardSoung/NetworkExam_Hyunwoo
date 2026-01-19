@@ -27,10 +27,10 @@ UUserWidget* UUIManager::ShowWidget(EUIType InUIType)
 
 				APlayerController* PC = UGameplayStatics::GetPlayerController(World, 0);
 
-				TargetUI = CreateWidget<UUserWidget>(PC, WidgetClass);
-				if (TargetUI)
+				CurrentWidget = CreateWidget<UUserWidget>(PC, WidgetClass);
+				if (CurrentWidget)
 				{
-					TargetUI->AddToViewport();
+					CurrentWidget->AddToViewport();
 					//CreatedWidgets.Add(InUIType, TargetUI);
 				}
 			}
@@ -40,4 +40,9 @@ UUserWidget* UUIManager::ShowWidget(EUIType InUIType)
 	//레벨 전환 시 삭제됨...
 
 	return nullptr;
+}
+
+UUserWidget* UUIManager::GetCurrentWidget()
+{
+	return CurrentWidget;
 }

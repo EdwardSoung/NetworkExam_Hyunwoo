@@ -53,12 +53,8 @@ void UGameManager::CreateServer()
 	FString Options = FString::Printf(TEXT("listen?MaxPlayers=%d"), MaxPlayers);
 	UE_LOG(LogTemp, Log, TEXT("리슨서버 생성 : %s, 최대인원 : %d"), *MapName, MaxPlayers);
 
-	auto State = World->GetGameState<APickupGameState>();
-	if (State)
-	{
-		State->ChangeState(EGameState::Waiting);
-	}
 	UGameplayStatics::OpenLevel(World, FName(*MapName), true, Options);
+	
 	UE_LOG(LogTemp, Log, TEXT("리슨서버 시작"));
 	if (GEngine)
 	{
@@ -89,7 +85,11 @@ void UGameManager::JoinServer(FString IPAddress)
 
 	UE_LOG(LogTemp, Log, TEXT("서버에 접속합니다 : %s"), *IPAddress);
 	PC->ClientTravel(IPAddress, ETravelType::TRAVEL_Absolute);
-
+	auto State = World->GetGameState<APickupGameState>();
+	if (State)
+	{
+		State->ChangeState(EGameState::Waiting);
+	}
 	UE_LOG(LogTemp, Log, TEXT("서버 접속 시작"));
 	if (GEngine)
 	{
