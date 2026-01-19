@@ -25,8 +25,6 @@ void UGameManager::Init()
 
 void UGameManager::CreateServer()
 {
-	
-
 	UWorld* World = GetWorld();
 	if (!World)
 	{
@@ -36,7 +34,6 @@ void UGameManager::CreateServer()
 
 	if (World->GetNetMode() == NM_ListenServer)
 	{
-
 		return;
 	}
 

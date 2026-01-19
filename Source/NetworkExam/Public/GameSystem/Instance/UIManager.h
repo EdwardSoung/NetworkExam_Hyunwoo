@@ -28,5 +28,6 @@ protected:
 	//생성된 UI 데이터
 	TMap<EUIType, UUserWidget*> CreatedWidgets;
 
-	TObjectPtr<UUserWidget> CurrentWidget;
+	UPROPERTY()
+	TObjectPtr<UUserWidget> CurrentWidget = nullptr;
 };

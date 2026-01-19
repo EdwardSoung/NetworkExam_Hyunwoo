@@ -27,8 +27,11 @@ public:
 	inline float GetPendingRemainingTime() const { return PendingRemainingTime; }
 	inline bool IsGameOver() const { return GameState == EGameState::Finished; }
 	inline EGameState GetCurrent() { return GameState; }
+	inline int32 GetTotalPoint() { return TotalPoint; }
 
 	void ChangeState(EGameState InState);
+
+	void AddToTotal(int32 InPoint);
 
 protected:
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Game Data")
@@ -51,4 +54,8 @@ protected:
 
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Game Data")
 	EGameState GameState = EGameState::Lobby;
+
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Game Data")
+	int32 TotalPoint = 0;
+
 };

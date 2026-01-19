@@ -27,6 +27,12 @@ UUserWidget* UUIManager::ShowWidget(EUIType InUIType)
 
 				APlayerController* PC = UGameplayStatics::GetPlayerController(World, 0);
 
+				if (CurrentWidget)
+				{
+					CurrentWidget->RemoveFromParent();
+					CurrentWidget = nullptr;
+				}
+
 				CurrentWidget = CreateWidget<UUserWidget>(PC, WidgetClass);
 				if (CurrentWidget)
 				{

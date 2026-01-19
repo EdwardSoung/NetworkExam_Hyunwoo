@@ -22,6 +22,7 @@ AItemSpawner::AItemSpawner()
 void AItemSpawner::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 void AItemSpawner::Spawn()
@@ -72,11 +73,14 @@ void AItemSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+    if (!HasAuthority())
+        return;
+
     if (!CachedGameState.IsValid())
     {
         CachedGameState = Cast<APickupGameState>(UGameplayStatics::GetGameState(this));
     }
-
+     
     if (CachedGameState.IsValid())
     {
         FTimerManager& TimerManager = GetWorld()->GetTimerManager();

@@ -57,6 +57,7 @@ void UPlayHUD_Widget::OnClickStart()
 	if (CachedGameState.IsValid())
 	{
 		CachedGameState->ChangeState(EGameState::OnReady);
+		SetStartButton(false);
 	}
 }
 
@@ -131,5 +132,23 @@ void UPlayHUD_Widget::SetStartButton(bool bIsVisible)
 	if (StartButton)
 	{
 		StartButton->SetVisibility(bIsVisible ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	}
+}
+
+void UPlayHUD_Widget::UpdateScore(int32 InPoint, bool bIsHost)
+{
+	if (bIsHost)
+	{
+		if (ServerPointText)
+		{
+			ServerPointText->SetText(FText::AsNumber(InPoint));
+		}
+	}
+	else
+	{
+		if (ClientPointText)
+		{
+			ClientPointText->SetText(FText::AsNumber(InPoint));
+		}
 	}
 }

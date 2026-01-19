@@ -2,6 +2,8 @@
 
 
 #include "Character/PlayerCharacter.h"
+#include "GameFramework/PlayerState.h"
+#include "GameSystem/State/PickupPlayerState.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -11,11 +13,37 @@ APlayerCharacter::APlayerCharacter()
 
 }
 
+void APlayerCharacter::AddScore(int InPoint)
+{
+	if (IsLocallyControlled())
+	{
+		Server_AddScore(InPoint);
+	}
+}
+
 // Called when the game starts or when spawned
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void APlayerCharacter::Server_AddScore_Implementation(int32 InPoint)
+{
+	APickupPlayerState* PS = GetPlayerState<APickupPlayerState>();
+	if (PS)
+	{
+		PS->AddMyScore(InPoint);
+	}
+}
+
+void APlayerCharacter::Server_SetName_Implementation(const FString& InName)
+{
+	APickupPlayerState* PS = GetPlayerState<APickupPlayerState>();
+	if (PS)
+	{
+		PS->SetMyName(InName);
+	}
 }
 
 // Called every frame

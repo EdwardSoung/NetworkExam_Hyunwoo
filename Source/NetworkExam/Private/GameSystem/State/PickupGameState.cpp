@@ -17,6 +17,7 @@ void APickupGameState::BeginPlay()
 	PendingRemainingTime = PendingDuration;
 	GameElapsedTime = 0.0f;
 	PendingElapsedTime = 0.0f;
+	TotalPoint = 0;
 }
 
 void APickupGameState::Tick(float DeltaTime)
@@ -96,6 +97,19 @@ void APickupGameState::ChangeState(EGameState InState)
 		break;
 	case EGameState::Finished:
 		//결과 화면
+		if (Manager)
+		{
+			UUIManager* UIManager = Manager->GetSubsystem<UUIManager>();
+			if (UIManager)
+			{
+				UIManager->ShowWidget(EUIType::ResultUI);
+			}
+		}
 		break;
 	}
+}
+
+void APickupGameState::AddToTotal(int32 InPoint)
+{
+	TotalPoint += InPoint;
 }

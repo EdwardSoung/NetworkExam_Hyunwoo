@@ -35,6 +35,8 @@ protected:
 public:
 	void SetStartButton(bool bIsVisible);
 
+	void UpdateScore(int32 InPoint, bool bIsHost);
+
 protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> StartButton = nullptr;

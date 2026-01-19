@@ -3,6 +3,8 @@
 
 #include "Item/PickupItem.h"
 #include "Components/SphereComponent.h"
+#include "Character/PlayerCharacter.h"
+#include "GameSystem/State/PickupGameState.h"
 
 // Sets default values
 APickupItem::APickupItem()
@@ -25,11 +27,20 @@ void APickupItem::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	GameState = GetWorld()->GetGameState<APickupGameState>();
 }
 
 void APickupItem::OnBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
-	//점수 처리...
+	APlayerCharacter* Character = Cast<APlayerCharacter>(OtherActor);
+	if (Character)
+	{
+		//끝나고 먹으면 점수 미반영...
+		if (GameState.IsValid() && GameState->GetCurrent() == EGameState::Playing)
+		{
+			Character->AddScore(ItemPoint);
+		}
+	}
 
 	Destroy();
 }

@@ -26,6 +26,9 @@ void APickupPlayerController::BeginPlay()
 			if (UIManager)
 			{
 				auto HUD = UIManager->ShowWidget(EUIType::GameHUD);
+				FInputModeGameAndUI InputMode;
+				SetInputMode(InputMode);
+				bShowMouseCursor = true;
 			}
 		}
 	}

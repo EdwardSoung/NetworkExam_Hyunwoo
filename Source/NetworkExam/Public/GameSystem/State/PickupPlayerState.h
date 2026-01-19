@@ -42,4 +42,8 @@ protected:
 
 	UPROPERTY(ReplicatedUsing = OnRep_MyName, BlueprintReadOnly, Category = "Data")
 	FString MyName;
+
+public:
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Data")
+	bool bIsHost = false;
 };

@@ -2,6 +2,9 @@
 
 
 #include "GameSystem/State/PickupPlayerState.h"
+#include "GameSystem/State/PickupGameState.h"
+#include "GameSystem/Instance/UIManager.h"
+#include "Widget/Play/PlayHUD_Widget.h"
 #include "Net/UnrealNetwork.h"
 
 //점수를 Playing 상태에서만 추가되어야함
@@ -11,6 +14,12 @@ void APickupPlayerState::AddMyScore(int32 Point)
 	if (HasAuthority())
 	{
 		MyScore += Point;
+		//Point를 저장해야...
+		APickupGameState* GS = GetWorld()->GetGameState<APickupGameState>();
+		if (GS)
+		{
+			GS->AddToTotal(Point);
+		}
 		OnRep_MyScore();	// 서버는 리플리케이션이 없으니 수동으로 호출
 	}
 
@@ -38,12 +47,28 @@ void APickupPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 
 	DOREPLIFETIME(APickupPlayerState, MyScore);	// 모든 클라이언트에 리플리케이션
 	DOREPLIFETIME(APickupPlayerState, MyName);
+	DOREPLIFETIME(APickupPlayerState, bIsHost);
 }
 
 void APickupPlayerState::OnRep_MyScore()
 {
 	UE_LOG(LogTemp, Log, TEXT("[%d]Score : %d"), GetPlayerId(), MyScore);
 
+	//현재 점수를 UI에 갱신
+	auto GI = GetGameInstance();
+	if (GI)
+	{
+		UUIManager* UIManager = GI->GetSubsystem<UUIManager>();
+		auto Widget = UIManager->GetCurrentWidget();
+		if (Widget)
+		{
+			auto HUD = Cast<UPlayHUD_Widget>(Widget);
+			if (HUD)
+			{
+				HUD->UpdateScore(MyScore, bIsHost);
+			}
+		}
+	}
 }
 
 void APickupPlayerState::OnRep_MyName()

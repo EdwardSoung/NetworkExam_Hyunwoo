@@ -31,4 +31,9 @@ protected:
 	TObjectPtr<UStaticMeshComponent> Mesh = nullptr;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item")
 	TObjectPtr<class USphereComponent> Collision = nullptr;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item")
+	int32 ItemPoint = 7;
+
+private:
+	TWeakObjectPtr<class APickupGameState> GameState = nullptr;
 };

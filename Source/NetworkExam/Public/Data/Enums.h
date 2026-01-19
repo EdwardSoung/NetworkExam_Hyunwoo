@@ -17,5 +17,6 @@ enum class EUIType : uint8
 {
 	None,
 	LobbyHUD,
-	GameHUD
+	GameHUD,
+	ResultUI,
 };

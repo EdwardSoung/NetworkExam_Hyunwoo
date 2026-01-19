@@ -3,6 +3,7 @@
 
 #include "GameSystem/Mode/PlayGameMode.h"
 #include "GameSystem/State/PickupGameState.h"
+#include "GameSystem/State/PickupPlayerState.h"
 #include "GameSystem/Instance/GameManager.h"
 #include "GameSystem/Instance/UIManager.h"
 #include "Widget/Play/PlayHUD_Widget.h"
@@ -22,6 +23,19 @@ void APlayGameMode::PostLogin(APlayerController* NewPlayer)
 	if (State)
 	{
 		State->ChangeState(EGameState::Waiting);
+	}
+
+	APickupPlayerState* PS = NewPlayer->GetPlayerState<APickupPlayerState>();
+	if (PS)
+	{
+		if (NewPlayer->IsLocalController())
+		{
+			PS->bIsHost = true;
+		}
+		else
+		{
+			PS->bIsHost = false;
+		}
 	}
 
 	if (currentPlayer == 2)
