@@ -28,6 +28,11 @@ void ULobbyManager::OnWorldBeginPlay(UWorld& InWorld)
 		if (UIManager)
 		{
 			UIManager->ShowWidget(EUIType::LobbyHUD);
+
+			if (InWorld.GetFirstPlayerController())
+			{
+				InWorld.GetFirstPlayerController()->bShowMouseCursor = true;
+			}
 		}
 	}
 }
