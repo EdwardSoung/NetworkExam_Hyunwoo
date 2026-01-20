@@ -7,6 +7,7 @@
 #include "Components/ProgressBar.h"
 
 #include "GameSystem/State/PickupGameState.h"
+#include "GameSystem/State/PickupPlayerState.h"
 #include "GameSystem/Instance/GameManager.h"
 #include <Kismet/GameplayStatics.h>
 
@@ -17,10 +18,11 @@ void UPlayHUD_Widget::NativeConstruct()
 	if (StartButton)
 	{
 		StartButton->OnClicked.AddDynamic(this, &UPlayHUD_Widget::OnClickStart);
-		ExitButton->OnClicked.AddDynamic(this, &UPlayHUD_Widget::OnClickExit);
 
 		SetStartButton(false);
 	}
+	if(ExitButton)
+		ExitButton->OnClicked.AddDynamic(this, &UPlayHUD_Widget::OnClickExit);
 
 	if (ServerPointBar)
 		ServerPointBar->SetPercent(0.0f);
@@ -58,6 +60,7 @@ void UPlayHUD_Widget::OnClickStart()
 	{
 		CachedGameState->ChangeState(EGameState::OnReady);
 		SetStartButton(false);
+		
 	}
 }
 
@@ -127,11 +130,28 @@ void UPlayHUD_Widget::UpdateRemainTimer()
 	}
 }
 
+void UPlayHUD_Widget::UpdateBar()
+{
+	if (TotalPoint > 0)
+	{
+		ServerPointBar->SetPercent((float)ServerPoint / TotalPoint);
+		ClientPointBar->SetPercent((float)ClientPoint / TotalPoint);
+	}
+}
+
 void UPlayHUD_Widget::SetStartButton(bool bIsVisible)
 {
 	if (StartButton)
 	{
 		StartButton->SetVisibility(bIsVisible ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	}
+}
+
+void UPlayHUD_Widget::SetExitButton(bool bIsVisible)
+{
+	if (ExitButton)
+	{
+		ExitButton->SetVisibility(bIsVisible ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
 	}
 }
 
@@ -143,6 +163,7 @@ void UPlayHUD_Widget::UpdateScore(int32 InPoint, bool bIsHost)
 		{
 			ServerPointText->SetText(FText::AsNumber(InPoint));
 		}
+		ServerPoint = InPoint;
 	}
 	else
 	{
@@ -150,5 +171,14 @@ void UPlayHUD_Widget::UpdateScore(int32 InPoint, bool bIsHost)
 		{
 			ClientPointText->SetText(FText::AsNumber(InPoint));
 		}
+		ClientPoint = InPoint;
 	}
+
+	UpdateBar();
+}
+
+void UPlayHUD_Widget::UpdateUITotalPoint(int32 InTotalPoint)
+{
+	TotalPoint = InTotalPoint;
+	UpdateBar();
 }

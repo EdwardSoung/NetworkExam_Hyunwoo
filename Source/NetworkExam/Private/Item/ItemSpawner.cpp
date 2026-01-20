@@ -63,6 +63,7 @@ void AItemSpawner::Spawn()
 
         if (NewActor)
         {
+            NewActor->AddActorLocalOffset(FVector(0, 0, 100.0f));
             NewActor->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
         }
     }

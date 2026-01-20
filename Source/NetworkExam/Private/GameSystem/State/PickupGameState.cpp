@@ -4,6 +4,8 @@
 #include "GameSystem/State/PickupGameState.h"
 #include "GameSystem/Instance/GameManager.h"
 #include "GameSystem/Instance/UIManager.h"
+#include "Widget/Play/PlayResultWidget.h"
+#include "Widget/Play/PlayHUD_Widget.h"
 #include "Net/UnrealNetwork.h"
 
 APickupGameState::APickupGameState()
@@ -62,12 +64,21 @@ void APickupGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(APickupGameState, GameState);
 	DOREPLIFETIME(APickupGameState, PendingElapsedTime);
 	DOREPLIFETIME(APickupGameState, PendingRemainingTime);
+	DOREPLIFETIME(APickupGameState, TotalPoint);
 }
 
 void APickupGameState::ChangeState(EGameState InState)
 {
-	GameState = InState;
-	
+	if (HasAuthority())
+	{
+		GameState = InState;
+
+		OnRep_StateChanged();
+	}
+}
+
+void APickupGameState::OnRep_StateChanged()
+{
 	UGameManager* Manager = Cast<UGameManager>(GetGameInstance());
 
 	switch (GameState)
@@ -80,19 +91,31 @@ void APickupGameState::ChangeState(EGameState InState)
 		break;
 	case EGameState::Waiting:
 		//게임 시작하기를 대기중
-		
+
 		break;
 
 	case EGameState::OnReady:
 		//Pending타이머 시작
 		UE_LOG(LogTemp, Log, TEXT("게임 시작 눌림!! 3초후 시작"));
-
+		if (Manager)
+		{
+			UUIManager* UIManager = Manager->GetSubsystem<UUIManager>();
+			if (UIManager)
+			{
+				auto Widget = UIManager->GetCurrentWidget();
+				auto PlayWidget = Cast<UPlayHUD_Widget>(Widget);
+				if (PlayWidget)
+				{
+					PlayWidget->SetExitButton(false);
+				}
+			}
+		}
 		break;
 
 	case EGameState::Playing:
 		//오브젝트 스폰 시작
 		UE_LOG(LogTemp, Log, TEXT("플레이 시작!!"));
-
+		//위젯에서 종료버튼 꺼줌		
 
 		break;
 	case EGameState::Finished:
@@ -102,14 +125,41 @@ void APickupGameState::ChangeState(EGameState InState)
 			UUIManager* UIManager = Manager->GetSubsystem<UUIManager>();
 			if (UIManager)
 			{
-				UIManager->ShowWidget(EUIType::ResultUI);
+				auto Widget = UIManager->ShowWidget(EUIType::ResultUI);
+				if (Widget)
+				{
+					Widget->Initialize();
+				}
 			}
 		}
 		break;
 	}
 }
 
+void APickupGameState::OnRep_TotalPointChanged()
+{
+	UGameManager* Manager = Cast<UGameManager>(GetGameInstance());
+	if (Manager)
+	{
+		UUIManager* UIManager = Manager->GetSubsystem<UUIManager>();
+		if (UIManager)
+		{
+			auto Widget = UIManager->GetCurrentWidget();
+			auto PlayWidget = Cast<UPlayHUD_Widget>(Widget);
+			if (PlayWidget)
+			{
+				PlayWidget->UpdateUITotalPoint(TotalPoint);
+			}
+		}
+	}
+}
+
 void APickupGameState::AddToTotal(int32 InPoint)
 {
-	TotalPoint += InPoint;
+	if (HasAuthority())
+	{
+		TotalPoint += InPoint;
+
+		OnRep_TotalPointChanged();
+	}
 }

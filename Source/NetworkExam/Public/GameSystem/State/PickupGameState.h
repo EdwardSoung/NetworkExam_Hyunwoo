@@ -31,6 +31,12 @@ public:
 
 	void ChangeState(EGameState InState);
 
+	UFUNCTION()
+	void OnRep_StateChanged();
+
+	UFUNCTION()
+	void OnRep_TotalPointChanged();
+
 	void AddToTotal(int32 InPoint);
 
 protected:
@@ -38,7 +44,7 @@ protected:
 	float GameElapsedTime = 0.0f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game Data")
-	float GameDuration = 10.0f;	// 게임 1판 시간. GameMode에 추가하는 것이 적합함(지금은 테스트용)
+	float GameDuration = 60.0f;	// 게임 1판 시간. GameMode에 추가하는 것이 적합함(지금은 테스트용)
 
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Game Data")
 	float GameRemainingTime = 0.0f;
@@ -52,10 +58,10 @@ protected:
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Game Data")
 	float PendingRemainingTime = 0.0f;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Game Data")
+	UPROPERTY(ReplicatedUsing = OnRep_StateChanged, BlueprintReadOnly, Category = "Game Data")
 	EGameState GameState = EGameState::Lobby;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Game Data")
+	UPROPERTY(ReplicatedUsing = OnRep_TotalPointChanged, BlueprintReadOnly, Category = "Game Data")
 	int32 TotalPoint = 0;
 
 };

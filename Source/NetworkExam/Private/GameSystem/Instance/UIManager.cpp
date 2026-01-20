@@ -38,6 +38,7 @@ UUserWidget* UUIManager::ShowWidget(EUIType InUIType)
 				{
 					CurrentWidget->AddToViewport();
 					//CreatedWidgets.Add(InUIType, TargetUI);
+					return CurrentWidget;
 				}
 			}
 		}

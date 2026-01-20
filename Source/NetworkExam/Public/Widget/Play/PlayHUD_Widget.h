@@ -32,10 +32,15 @@ protected:
 
 	void UpdateRemainTimerText();
 	void UpdateRemainTimer();
+
+	void UpdateBar();
 public:
 	void SetStartButton(bool bIsVisible);
+	void SetExitButton(bool bIsVisible);
 
 	void UpdateScore(int32 InPoint, bool bIsHost);
+
+	void UpdateUITotalPoint(int32 InTotalPoint);
 
 protected:
 	UPROPERTY(meta = (BindWidget))
@@ -60,4 +65,8 @@ protected:
 
 private:
 	TWeakObjectPtr<class APickupGameState> CachedGameState = nullptr;
+
+	int32 TotalPoint = 0;
+	int32 ServerPoint = 0;
+	int32 ClientPoint = 0;
 };
